@@ -1,15 +1,18 @@
+import database.DatabaseConnectionFactory;
 import database.JDBConnectionWrapper;
 import model.Book;
 import model.builder.BookBuilder;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryMock;
+import repository.book.BookRepositoryMySQL;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        BookRepository bookRepository = new BookRepositoryMock();
+        BookRepository bookRepository = new BookRepositoryMySQL(DatabaseConnectionFactory.getConnectionWrapper(true).getConnection());
 
         Book book = new BookBuilder()
                 .setId(1L)
@@ -18,12 +21,16 @@ public class Main {
                 .setPublishedDate(LocalDate.of(2020, 10, 3))
                 .build();
 
-        bookRepository.save(book);
-        System.out.println(bookRepository.findAll());
-        System.out.println(bookRepository.findById(1L));
+        //bookRepository.save(book);
+        //System.out.println(bookRepository.findAll());
+        System.out.println(bookRepository.findById(2L));
 
         JDBConnectionWrapper jdbConnectionWrapper = new JDBConnectionWrapper("test_library");
 
-        System.out.println(jdbConnectionWrapper.getConnection());
+        try {
+            System.out.println(jdbConnectionWrapper.testConnection());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

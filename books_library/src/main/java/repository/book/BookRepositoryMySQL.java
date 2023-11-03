@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepositoryMySQL implements BookRepository{
+public class BookRepositoryMySQL implements BookRepository {
     private final Connection connection;
 
-    public BookRepositoryMySQL(Connection connection){
+    public BookRepositoryMySQL(Connection connection) {
         this.connection = connection;
     }
 
@@ -24,7 +24,7 @@ public class BookRepositoryMySQL implements BookRepository{
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 books.add(getBookFromResultSet(resultSet));
             }
         } catch (SQLException e) {
@@ -36,7 +36,23 @@ public class BookRepositoryMySQL implements BookRepository{
 
     @Override
     public Optional<Book> findById(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM book WHERE id = ?;";
+        Optional<Book> returnValue = Optional.empty();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                returnValue = Optional.ofNullable(getBookFromResultSet(resultSet));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return returnValue;
     }
 
     @Override
@@ -49,16 +65,27 @@ public class BookRepositoryMySQL implements BookRepository{
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getTitle());
             statement.setDate(3, Date.valueOf(book.getPublishedDate()));
+
+            int rowsInserted = statement.executeUpdate();
+
+            return rowsInserted == 1;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return true;
     }
 
     @Override
     public void removeAll() {
+        String sql = "DELETE FROM book";
 
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException {

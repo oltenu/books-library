@@ -2,9 +2,7 @@ package repository.book;
 
 import model.Book;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.*;
 
 public interface BookRepository {
     List<Book> findAll();
