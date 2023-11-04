@@ -37,18 +37,18 @@ public class BookRepositoryMySQL implements BookRepository{
     @Override
     public Optional<Book> findById(Long id) {
         return Optional.empty();
+        //No need for implementation on this branch.
     }
 
     @Override
     public boolean save(Book book) {
 
-        String sql = "INSERT INTO book VALUES(null, ?, ?, ?);";
+        String newSql = "INSERT INTO book VALUES(null, \'" + book.getAuthor() +"\', \'"+ book.getTitle()+"\', null );";
 
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, book.getAuthor());
-            statement.setString(2, book.getTitle());
-            statement.setDate(3, Date.valueOf(book.getPublishedDate()));
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(newSql);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +58,7 @@ public class BookRepositoryMySQL implements BookRepository{
 
     @Override
     public void removeAll() {
-
+        //No need for implementation on this branch.
     }
 
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException {
