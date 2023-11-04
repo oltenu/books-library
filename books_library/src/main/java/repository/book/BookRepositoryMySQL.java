@@ -78,7 +78,7 @@ public class BookRepositoryMySQL implements BookRepository {
 
     @Override
     public void removeAll() {
-        String sql = "DELETE FROM book";
+        String sql = "TRUNCATE TABLE book";
 
         try {
             Statement statement = connection.createStatement();

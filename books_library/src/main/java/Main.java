@@ -12,25 +12,42 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        BookRepository bookRepository = new BookRepositoryMySQL(DatabaseConnectionFactory.getConnectionWrapper(true).getConnection());
-
-        Book book = new BookBuilder()
-                .setId(1L)
+        BookRepository repository = new BookRepositoryMySQL(DatabaseConnectionFactory.getConnectionWrapper(true).getConnection());
+        //repository.removeAll();
+        Book book1 = new BookBuilder()
                 .setTitle("To Die in Spring")
                 .setAuthor("Ralf Rothmann")
-                .setPublishedDate(LocalDate.of(2020, 10, 3))
+                .setPublishedDate(LocalDate.of(2015, 10, 3))
                 .build();
 
-        //bookRepository.save(book);
-        //System.out.println(bookRepository.findAll());
-        System.out.println(bookRepository.findById(2L));
+        Book book2 = new BookBuilder()
+                .setTitle("Sapiens: A Brief History of Humankind")
+                .setAuthor("Yuval Noah")
+                .setPublishedDate(LocalDate.of(2011, 4, 25))
+                .build();
 
-        JDBConnectionWrapper jdbConnectionWrapper = new JDBConnectionWrapper("test_library");
+        Book book3 = new BookBuilder()
+                .setTitle("The Book Thief")
+                .setAuthor("Markus Zusak")
+                .setPublishedDate(LocalDate.of(2014, 2, 7))
+                .build();
 
-        try {
-            System.out.println(jdbConnectionWrapper.testConnection());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Book book4 = new BookBuilder()
+                .setTitle("A Tree Grows in Brooklyn")
+                .setAuthor("Betty Smith")
+                .setPublishedDate(LocalDate.of(1943, 7, 25))
+                .build();
+
+        Book book5 = new BookBuilder()
+                .setTitle("Black and White")
+                .setAuthor("Caitlin Kittredge and Jackie Kessler")
+                .setPublishedDate(LocalDate.of(2009, 12, 10))
+                .build();
+
+        repository.save(book1);
+        repository.save(book2);
+        repository.save(book3);
+        repository.save(book4);
+        repository.save(book5);
     }
 }

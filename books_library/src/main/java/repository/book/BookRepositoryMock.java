@@ -26,11 +26,22 @@ public class BookRepositoryMock implements BookRepository{
 
     @Override
     public boolean save(Book book) {
+        autoIncrement(book);
+
         return books.add(book);
     }
 
     @Override
     public void removeAll() {
         books.clear();
+    }
+
+    private void autoIncrement(Book book){
+        if (books.isEmpty()){
+            book.setId(1L);
+        }else {
+            Optional<Book> optional = books.stream().max(Comparator.comparingLong(Book::getId));
+            book.setId(optional.get().getId() + 1);
+        }
     }
 }
