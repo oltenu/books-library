@@ -4,11 +4,11 @@ import model.Book;
 
 import java.util.*;
 
-public class BookRepositoryMock implements BookRepository{
+public class BookRepositoryMock implements BookRepository {
 
     private final List<Book> books;
 
-    public BookRepositoryMock(){
+    public BookRepositoryMock() {
         books = new ArrayList<>();
     }
 
@@ -36,10 +36,10 @@ public class BookRepositoryMock implements BookRepository{
         books.clear();
     }
 
-    private void autoIncrement(Book book){
-        if (books.isEmpty()){
+    private void autoIncrement(Book book) {
+        if (books.isEmpty()) {
             book.setId(1L);
-        }else {
+        } else {
             Optional<Book> optional = books.stream().max(Comparator.comparingLong(Book::getId));
             book.setId(optional.get().getId() + 1);
         }
