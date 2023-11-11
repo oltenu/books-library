@@ -1,7 +1,6 @@
 package model;
 
 import helper.Id;
-import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.Objects;

@@ -21,7 +21,7 @@ public class Cache<ID, T> {
         return mapToList();
     }
 
-    public Map<ID, T> loadMap(){
+    public Map<ID, T> loadMap() {
         return storage;
     }
 

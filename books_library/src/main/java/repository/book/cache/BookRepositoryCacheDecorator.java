@@ -27,7 +27,7 @@ public class BookRepositoryCacheDecorator<T> extends BookRepositoryDecorator<T> 
 
     @Override
     public Optional<T> findById(Long id) {
-        if(cache.hasResult()){
+        if (cache.hasResult()) {
             return Optional.ofNullable(cache.loadMap().get(id));
         }
 

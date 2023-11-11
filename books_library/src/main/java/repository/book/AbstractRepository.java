@@ -18,7 +18,7 @@ public class AbstractRepository<T> {
     private final Class<T> type;
     private final Connection connection;
 
-    public AbstractRepository(Class<T> classType){
+    public AbstractRepository(Class<T> classType) {
         this.connection = DatabaseConnectionFactory.getConnectionWrapper(true).getConnection();
         this.type = classType;
     }
@@ -75,41 +75,48 @@ public class AbstractRepository<T> {
     }
 
     public boolean save(T t) {
-        PreparedStatement statement;
         try {
-            StringBuilder fieldsString = new StringBuilder("(");
-            StringBuilder valuesString = new StringBuilder("('");
+            StringBuilder names = new StringBuilder();
+            StringBuilder questionMarks = new StringBuilder();
+            List<Object> values = new ArrayList<>();
             Field[] fields = type.getDeclaredFields();
 
-            for (int i = 0; i < fields.length - 1; i++) {
-                fields[i].setAccessible(true);
-                if(!fields[i].isAnnotationPresent(Id.class)){
-                    fieldsString.append(fields[i].getName()).append(", ");
-                    valuesString.append(fields[i].get(t)).append("', '");
+            for (Field field : fields) {
+                field.setAccessible(true);
+
+                if (!field.isAnnotationPresent(Id.class)) {
+                    names.append(field.getName()).append(",");
+                    questionMarks.append("?,");
+                    values.add(field.get(t));
                 }
             }
-            fields[fields.length - 1].setAccessible(true);
-            if(!fields[fields.length - 1].isAnnotationPresent(Id.class)){
-                fieldsString.append(fields[fields.length - 1].getName()).append(") ");
-                valuesString.append(fields[fields.length - 1].get(t)).append("') ");
+            names.deleteCharAt(names.length() - 1);
+            questionMarks.deleteCharAt(questionMarks.length() - 1);
+
+            String query = "INSERT INTO "
+                    + type.getSimpleName()
+                    + "("
+                    + names
+                    + ")"
+                    + " VALUES "
+                    + "("
+                    + questionMarks
+                    + ")";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            int index = 1;
+            for (Object value : values) {
+                preparedStatement.setObject(index++, value);
             }
 
-            String query = "INSERT INTO " +
-                    type.getSimpleName() +
-                    fieldsString +
-                    " VALUES " +
-                    valuesString;
+            return preparedStatement.executeUpdate() == 1;
 
-            System.out.println(query);
-
-            statement = connection.prepareStatement(query);
-            int rowInserted = statement.executeUpdate();
-
-            return rowInserted == 1;
         } catch (SQLException | IllegalAccessException e) {
             e.printStackTrace();
-            return false;
         }
+
+        return false;
     }
 
     public void removeAll() {
@@ -145,9 +152,9 @@ public class AbstractRepository<T> {
                     Object value = resultSet.getObject(fieldName);
                     PropertyDescriptor propertyDescriptor = new PropertyDescriptor(fieldName, type);
                     Method setMethod = propertyDescriptor.getWriteMethod();
-                    if(field.getType() == LocalDate.class){
-                        setMethod.invoke(instance, ((LocalDateTime)value).toLocalDate());
-                    }else {
+                    if (field.getType() == LocalDate.class) {
+                        setMethod.invoke(instance, ((LocalDateTime) value).toLocalDate());
+                    } else {
                         setMethod.invoke(instance, value);
                     }
                 }
