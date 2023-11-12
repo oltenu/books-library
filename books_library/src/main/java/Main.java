@@ -9,7 +9,7 @@ import repository.book.AbstractRepository;
 import repository.book.AudioBookRepository;
 import repository.book.BookRepository;
 import repository.book.EBookRepository;
-import repository.book.cache.BookRepositoryCacheDecorator;
+import repository.book.cache.RepositoryCacheDecorator;
 import repository.book.cache.Cache;
 import service.book.*;
 
@@ -23,13 +23,13 @@ public class Main {
         Cache<Long, EBook> eCache = new Cache<>();
         Cache<Long, AudioBook> audioCache = new Cache<>();
 
-        AbstractRepository<Book> bookRepository = new BookRepositoryCacheDecorator<>(
+        AbstractRepository<Book> bookRepository = new RepositoryCacheDecorator<>(
                 new BookRepository(connection), cache, Book.class);
 
-        AbstractRepository<EBook> eBookRepository = new BookRepositoryCacheDecorator<>(
+        AbstractRepository<EBook> eBookRepository = new RepositoryCacheDecorator<>(
                 new EBookRepository(connection), eCache, EBook.class);
 
-        AbstractRepository<AudioBook> audioBookRepository = new BookRepositoryCacheDecorator<>(
+        AbstractRepository<AudioBook> audioBookRepository = new RepositoryCacheDecorator<>(
                 new AudioBookRepository(connection), audioCache, AudioBook.class);
 
         BookService bookService = new BookServiceImplementation(bookRepository);

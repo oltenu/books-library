@@ -5,10 +5,10 @@ import repository.book.AbstractRepository;
 import java.util.List;
 import java.util.Optional;
 
-public class BookRepositoryCacheDecorator<T> extends BookRepositoryDecorator<T> {
+public class RepositoryCacheDecorator<T> extends RepositoryDecorator<T> {
     private final Cache<Long, T> cache;
 
-    public BookRepositoryCacheDecorator(AbstractRepository<T> repository, Cache<Long, T> cache, Class<T> classType) {
+    public RepositoryCacheDecorator(AbstractRepository<T> repository, Cache<Long, T> cache, Class<T> classType) {
         super(repository, classType);
         this.cache = cache;
     }
