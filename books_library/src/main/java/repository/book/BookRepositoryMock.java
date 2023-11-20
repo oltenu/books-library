@@ -2,13 +2,15 @@ package repository.book;
 
 import model.Book;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public class BookRepositoryMock implements BookRepository {
+public class BookRepositoryMock implements BookRepository{
 
-    private final List<Book> books;
+    private List<Book> books;
 
-    public BookRepositoryMock() {
+    public BookRepositoryMock(){
         books = new ArrayList<>();
     }
 
@@ -26,22 +28,11 @@ public class BookRepositoryMock implements BookRepository {
 
     @Override
     public boolean save(Book book) {
-        autoIncrement(book);
-
         return books.add(book);
     }
 
     @Override
     public void removeAll() {
         books.clear();
-    }
-
-    private void autoIncrement(Book book) {
-        if (books.isEmpty()) {
-            book.setId(1L);
-        } else {
-            Optional<Book> optional = books.stream().max(Comparator.comparingLong(Book::getId));
-            book.setId(optional.get().getId() + 1);
-        }
     }
 }

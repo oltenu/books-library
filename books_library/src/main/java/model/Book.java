@@ -1,13 +1,23 @@
 package model;
 
-import java.time.LocalDate;
-import java.util.Objects;
+// Java Bean -
 
-public class Book {
+// POJO - Plain Old Java Object
+
+
+import java.time.LocalDate;
+import java.util.Date;
+
+public class Book{
+
     private Long id;
+
     private String author;
+
     private String title;
+
     private LocalDate publishedDate;
+
 
     public Long getId() {
         return id;
@@ -42,24 +52,7 @@ public class Book {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(id, book.id) && Objects.equals(author, book.author) && Objects.equals(title, book.title) && Objects.equals(publishedDate, book.publishedDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, author, title, publishedDate);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", publishedDate=" + publishedDate +
-                '}';
+    public String toString(){
+        return String.format("Id: %d | Title: %s | Author: %s | Date: %s", this.id, this.title, this.author, this.publishedDate);
     }
 }

@@ -1,14 +1,10 @@
 package repository.book;
 
-import model.Book;
-
-import java.util.List;
-import java.util.Optional;
-
-public abstract class BookRepositoryDecorator implements BookRepository {
+public abstract class BookRepositoryDecorator implements BookRepository{
     protected BookRepository decoratedRepository;
 
-    public BookRepositoryDecorator(BookRepository decoratedRepository) {
-        this.decoratedRepository = decoratedRepository;
+    public BookRepositoryDecorator(BookRepository bookRepository){
+        this.decoratedRepository = bookRepository;
     }
+
 }
